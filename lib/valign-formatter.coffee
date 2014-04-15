@@ -1,38 +1,98 @@
+getSpaces = (length) ->
+  return Array(length).join ' '
+
 module.exports =
-  buildText: (lines, alignment_index) ->
+  ###
+  @name Build Text
+  @description
+  Take the formatted lines and the given max indexes to build the formatted
+  text block.
+
+  @param {Object} formatted_lines
+  @param {Object} index_map
+  @returns {String} text
+  ###
+
+  buildText: (formatted_lines, index_map) ->
+    for formatted_line in formatted_lines
+      for part, i in formatted_line.parts
+        spaces = getSpaces index_map[i] - part.index + 1
+
+        content = switch part.type
+          when ':' then part.input.replace /[\s]*([:])[\s]*/, "$1 #{spaces}"
+          when '=' then part.input.replace /[\s]*([=])[\s]*/, "#{spaces} = "
+          when 'string' then "#{part.input}"
+          when 'number' then "#{spaces}#{part.input}"
+          else ''
+
+        part.content = content
+
+    content_map = []
+
+    for formatted_line in formatted_lines
+      for part, i in formatted_line.parts
+        if not content_map[i] || part.content.length > content_map[i]
+          content_map[i] = part.content.length
+
     text = []
 
-    for line in lines
-      spaces = Array(alignment_index - line.index + 1).join ' '
+    for formatted_line in formatted_lines
+      parts = []
 
-      replacement = switch line.symbol
-        when ':' then "$1 #{spaces}"
-        when '=' then "#{spaces} $1 "
-        else ''
+      {
+        indent
+        indent_level
+        prefix
+        suffix
+      } = formatted_line
 
-      text.push line.content.replace /[\s]*([:=])[\s]*/, replacement
+      indentation = getSpaces indent * indent_level + 1
+
+      for part, i in formatted_line.parts
+        max_content_length = content_map[i - 1]
+
+        if max_content_length?
+          content_length = formatted_line.parts[i - 1].content.length
+
+          spaces = getSpaces max_content_length - content_length + 1
+        else
+          spaces = ''
+
+        parts.push "#{spaces}#{part.content}"
+
+      text.push "#{indentation}#{prefix}#{parts.join ', '}#{suffix}"
 
     return text.join "\n"
+
+  ###
+  @name Find Block
+  @description
+  Find the start and end line positions for the matching cursor block.
+
+  @param {Object} editor
+  @returns {Object} block
+  ###
 
   findBlock: (editor) ->
     row  = editor.getCursorBufferPosition().row
     line = editor.lineForBufferRow row
 
-    if (line is '' or !line.match /[:=]/)
+    indentation = editor.indentationForBufferRow row
+
+    # todo: make more robust for string containing symbols
+    # todo: atom may have line parsing?
+    if (line is '' or !line.match /[:=,]/)
       return null
 
     isRowValid = (row) ->
       line = editor.lineForBufferRow row
 
       return line and
-             line.match(/[:=]/) and
+             line.match(/[:=,]/) and
              indentation is editor.indentationForBufferRow row
 
     nextLine = previousLine = line
     nextRow = previousRow = row
-
-    # get line indentation
-    indentation = editor.indentationForBufferRow row
 
     while isRowValid nextRow
       nextRow += 1
@@ -45,6 +105,14 @@ module.exports =
       end: nextRow - 1
     }
 
+  ###
+  @name Format Block
+  @description
+  Format selected cursor block
+
+  @param {Object} editor
+  ###
+
   formatBlock: (editor) ->
     block = @findBlock editor
 
@@ -52,32 +120,119 @@ module.exports =
 
     lines = @getLines editor, block
 
-    alignment_index = @getSymbolIndexFromLines lines
+    formatted_lines = @formatLines lines
 
-    text = @buildText lines, alignment_index
+    index_map = @getIndexMap formatted_lines
 
-    @writeText editor, text, block, lines
+    text = @buildText formatted_lines, index_map
 
+    @writeText editor, text, block
+
+  ###
+  @name Format Lines
+  @description
+  Attach Split a given line into parts and attach the associated meta data to each
+  line part.
+
+  @param {Object} lines
+  @return {Object} formatted_lines
+  ###
+
+  formatLines: (lines) ->
+    symbol_regex  = /(.*?)[\s]*([:=])/
+
+    for line in lines
+      line_parts = []
+
+      parts = line.input.split ','
+
+      for part in parts
+        content = part.trim()
+
+        # if the content contains symbol
+        if symbol_match = symbol_regex.exec content
+          line_parts.push
+            index: symbol_match[1].length
+            input: symbol_match.input
+            type:  symbol_match[2]
+
+        # if the content is string/int
+        else
+          line_parts.push
+            index: content.length
+            input: content
+            type:  if content.match /[\d.]+/ then 'number' else 'string'
+
+      line.parts = line_parts
+
+    return lines;
+
+  ###
+  @name Get Index Map
+  @description
+  Find the largest index per each line part. There will be multiple parts
+  if there are commas.
+
+  @param {Object} formatted_lines
+  @returns {Array} index_map
+  ###
+  getIndexMap: (formatted_lines) ->
+    index_map = []
+
+    for formatted_line in formatted_lines
+      for part, i in formatted_line.parts
+        if not index_map[i] || part.index > index_map[i]
+          index_map[i] = part.index
+
+    return index_map
+
+  ###
+  @name Get Lines
+  @description
+  Parse lines from given block start and end positions. Additionally, set any
+  extra line meta data for later use.
+
+  @param {Object} editor
+  @param {Object} block
+  @returns {Array} lines
+  ###
   getLines: (editor, block) ->
     lines = []
 
+    wrapper_regex = /^([\{\[\(])(.*?)([\}\]\)])$/
+
     for i in [block.start..block.end]
-      line = editor.lineForBufferRow i
+      input = editor.lineForBufferRow i
 
-      regex = /(.*?)[\s]*([:=])/
+      if match = wrapper_regex.exec input.trim()
+        input  = match[2]
+        prefix = match[1]
+        suffix = match[3]
+      else
+        prefix = ''
+        suffix = ''
 
-      if match = regex.exec line
-        lines.push
-          index:   match[1].length
-          content: match.input
-          symbol:  match[2]
+      lines.push
+        indent:       editor.getTabLength()
+        indent_level: editor.indentationForBufferRow i
+        input:        input.trim()
+        prefix:       prefix
+        suffix:       suffix
 
     return lines
 
-  getSymbolIndexFromLines: (lines) ->
-    return Math.max.apply null, (line.index for line in lines)
+  ###
+  @name Write Text
+  @description
+  Write text block to buffer, overriding previous text. Replace cursor to the
+  end of the current line.
 
-  writeText: (editor, text, block, lines) ->
+  @param {Object} editor
+  @param {String} text
+  @param {Object} block
+  ###
+
+  writeText: (editor, text, block) ->
     # get cursor row
     cursor_row = editor.getCursorBufferPosition().row
 
@@ -85,7 +240,7 @@ module.exports =
     last_line = editor.lineForBufferRow block.end
 
     # replace text
-    editor.setTextInBufferRange [[block.start, 0], [block.end, last_line.length]], "#{text}"
+    editor.setTextInBufferRange [[block.start, 0], [block.end, last_line.length]], text
 
     # reset cursor position to end of previous selected line
     editor.setCursorBufferPosition [cursor_row, 0]

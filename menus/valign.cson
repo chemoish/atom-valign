@@ -7,9 +7,9 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'valign'
+      'label': 'Valign'
       'submenu': [
-        { 'label': 'Toggle', 'command': 'valign:align' }
+        { 'label': 'Align', 'command': 'valign:align' }
       ]
     ]
   }
