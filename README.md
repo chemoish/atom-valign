@@ -57,7 +57,7 @@ numero =
 #### Comma seperated objects
 
 ```coffeescript
-#from
+# from
 ["uno":1,"dos":2]
 ["diez":10,"once":11]
 ["vente":20,"vente y uno":21]
