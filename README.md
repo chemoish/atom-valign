@@ -6,6 +6,8 @@
 
 ## Examples
 
+#### Equal
+
 ```coffeescript
 # from
 one  ="uno"
@@ -19,6 +21,8 @@ two   = "dos"
 three = "thres"
 four  = "quatro"
 ```
+
+#### Colon
 
 ```coffeescript
 # from
@@ -36,6 +40,8 @@ numero =
   four:  "quatro"
 ```
 
+#### Comma
+
 ```coffeescript
 # from
 ["uno",1,"one"]
@@ -47,6 +53,8 @@ numero =
 ["dos",   2, "two"]
 ["diez", 10, "ten"]
 ```
+
+#### Comma seperated objects
 
 ```coffeescript
 #from
