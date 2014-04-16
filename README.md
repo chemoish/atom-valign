@@ -1,6 +1,7 @@
 # Atom.io – Valign Package
 
 > Align operators and comma separated values in atom editor for CoffeeScript with `ctrl-\`.
+> Technically works for Jade.
 
 ![valign](https://raw.github.com/chemoish/atom-valign/master/demo.gif)
 
@@ -67,3 +68,20 @@ numero =
 ["diez":  10, "once":        11]
 ["vente": 20, "vente y uno": 21]
 ```
+
+#### Jade
+
+```jade
+div(
+  data-uno  ="1"
+  data-dos="2"
+  data-diez=  "10"
+)
+
+div(
+  data-uno  = "1"
+  data-dos  = "2"
+  data-diez = "10"
+)
+```
+####
