@@ -54,7 +54,7 @@ numero =
 ["diez", 10, "ten"]
 ```
 
-#### Comma seperated objects
+#### Comma seperated object
 
 ```coffeescript
 # from
