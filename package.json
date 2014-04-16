@@ -1,7 +1,7 @@
 {
   "name": "valign",
   "main": "./lib/valign",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Aligns your code.",
   "activationEvents": [
     "valign:align"
