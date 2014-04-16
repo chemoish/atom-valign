@@ -11,11 +11,17 @@ describe 'Valign:', ->
   editor = null
 
   beforeEach ->
-    atom.workspaceView = new WorkspaceView
-    atom.workspaceView.openSync()
+    waitsForPromise ->
+      atom.packages.activatePackage 'language-coffee-script'
 
-    editorView = atom.workspaceView.getActiveView()
-    editor = editorView.getEditor()
+    runs ->
+      atom.workspaceView = new WorkspaceView
+      atom.workspaceView.openSync()
+
+      editorView = atom.workspaceView.getActiveView()
+      editor = editorView.getEditor()
+
+      editor.setGrammar atom.syntax.selectGrammar "test.coffee"
 
   describe 'Formatting ":"', ->
     beforeEach ->
@@ -93,3 +99,19 @@ describe 'Valign:', ->
       expect(editor.lineForBufferRow 4).toBe  '["uno":   1,  "dos":         2]'
       expect(editor.lineForBufferRow 5).toBe  '["diez":  10, "once":        11]'
       expect(editor.lineForBufferRow 6).toBe '["vente": 20, "vente y uno": 21]'
+
+  describe 'Formatting "comments"', ->
+    beforeEach ->
+      editor.setText """
+        one  =  "uno"
+        two="dos"
+        # TODO: delete three
+        three="thres"
+        four =    "quatro"
+      """
+
+      Valign.align editor
+
+    it 'should align correctly, but capture and ignore formatting of commented lines', ->
+      expect(editor.lineForBufferRow 0).toBe 'one   = "uno"'
+      expect(editor.lineForBufferRow 2).toBe '# TODO: delete three'

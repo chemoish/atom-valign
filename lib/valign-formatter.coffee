@@ -88,7 +88,7 @@ module.exports =
       line = editor.lineForBufferRow row
 
       return line and
-             line.match(/[:=,]/) and
+             (editor.isBufferRowCommented(row) or line.match(/[:=,]/)) and
              indentation is editor.indentationForBufferRow row
 
     nextLine = previousLine = line
@@ -122,6 +122,8 @@ module.exports =
 
     formatted_lines = @formatLines lines
 
+    console.log formatted_lines, editor.getGrammar()
+
     index_map = @getIndexMap formatted_lines
 
     text = @buildText formatted_lines, index_map
@@ -144,24 +146,31 @@ module.exports =
     for line in lines
       line_parts = []
 
-      parts = line.input.split ','
+      if line.is_comment
+        line_parts.push
+          index: 0
+          input: line.input.trim()
+          type:  'string'
 
-      for part in parts
-        content = part.trim()
+      else
+        parts = line.input.split ','
 
-        # if the content contains symbol
-        if symbol_match = symbol_regex.exec content
-          line_parts.push
-            index: symbol_match[1].length
-            input: symbol_match.input
-            type:  symbol_match[2]
+        for part in parts
+          content = part.trim()
 
-        # if the content is string/int
-        else
-          line_parts.push
-            index: content.length
-            input: content
-            type:  if content.match /[\d.]+/ then 'number' else 'string'
+          # if the content contains symbol
+          if symbol_match = symbol_regex.exec content
+            line_parts.push
+              index: symbol_match[1].length
+              input: symbol_match.input
+              type:  symbol_match[2]
+
+          # if the content is string/int
+          else
+            line_parts.push
+              index: content.length
+              input: content
+              type:  if content.match /[\d.]+/ then 'number' else 'string'
 
       line.parts = line_parts
 
@@ -216,6 +225,7 @@ module.exports =
         indent:       editor.getTabLength()
         indent_level: editor.indentationForBufferRow i
         input:        input.trim()
+        is_comment:   editor.isBufferRowCommented i
         prefix:       prefix
         suffix:       suffix
 
