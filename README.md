@@ -1,6 +1,6 @@
-# Atom.io Valign Package for CoffeeScript
+# Atom.io – Valign Package
 
-> Align operators and comma separated values in atom editor.
+> Align operators and comma separated values in atom editor  for CoffeeScript.
 
 ```
 hotkey: ctrl-\
