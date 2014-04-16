@@ -1,7 +1,7 @@
 {
   "name": "valign",
   "main": "./lib/valign",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Align operators and comma separated values in atom editor for CoffeeScript.",
   "activationEvents": [
     "valign:align"
