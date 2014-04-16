@@ -7,14 +7,35 @@
 
 ## Examples
 
+#### Colon
+
+```coffeescript
+# from
+numero =
+  one  :  "uno"
+  two:"dos"
+  # TODO: ignore me
+  three  :"thres"
+  four:  "quatro"
+
+# to
+numero =
+  one:   "uno"
+  two:   "dos"
+  # TODO: ignore me
+  three: "thres"
+  four:  "quatro"
+```
+
 #### Equal
 
 ```coffeescript
 # from
-one  ="uno"
+one  =  "uno"
 two="dos"
-three="thres"
+three  ="thres"
 four=  "quatro"
+# TODO: ignore me
 five = contar 2, 3
 
 # to
@@ -22,27 +43,24 @@ one   = "uno"
 two   = "dos"
 three = "thres"
 four  = "quatro"
+# TODO: ignore me
 five  = contar 2, 3
 ```
 
-#### Colon
+#### Assignment Operator
 
 ```coffeescript
 # from
-numero =
-  one  :"uno"
-  two:"dos"
-  # TODO: delete me
-  three:"thres"
-  four: "quatro"
+one  =  "uno"
+two+="dos"
+three  -="thres"
+four=  "quatro"
 
 # to
-numero =
-  one:   "uno"
-  two:   "dos"
-  # TODO: delete me
-  three: "thres"
-  four:  "quatro"
+one    = "uno"
+two   += "dos"
+three -= "thres"
+four   = "quatro"
 ```
 
 #### Comma
@@ -79,13 +97,13 @@ numero =
 div(
   data-uno  ="1"
   data-dos="2"
-  data-diez=  "10"
+  ng-diez=  getDiez(10, 0)
 )
 
 div(
-  data-uno  = "1"
-  data-dos  = "2"
-  data-diez = "10"
+  data-uno = "1"
+  data-dos = "2"
+  ng-diez  = getDiez(10, 0)
 )
 ```
 ####

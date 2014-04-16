@@ -19,8 +19,10 @@ module.exports =
         spaces = getSpaces index_map[i] - part.index + 1
 
         content = switch part.type
-          when ':' then part.input.replace /[\s]*([:])[\s]*/, "$1 #{spaces}"
-          when '=' then part.input.replace /[\s]*([=])[\s]*/, "#{spaces} = "
+          when ':'
+            part.input.replace /[\s]*([:])[\s]*/, "$1 #{spaces}"
+          when '=', '+=', '-='
+            part.input.replace /[\s]*([+-]?[=])[\s]*/, "#{spaces} $1 "
           when 'string' then "#{part.input}"
           when 'number' then "#{spaces}#{part.input}"
           else ''
@@ -139,7 +141,7 @@ module.exports =
   ###
 
   formatLines: (lines) ->
-    symbol_regex  = /(.*?)[\s]*([:=])/
+    symbol_regex  = /(.*?)[\s]*([+-]?[:=])/
 
     for line in lines
       line_parts = []
@@ -161,10 +163,16 @@ module.exports =
 
           # if the content contains symbol
           if symbol_match = symbol_regex.exec content
+            operator = symbol_match[2]
+
+            # assignment operators will be longer and we should attach the extra
+            # character to the index
+            index = symbol_match[1].length + operator.length - 1
+
             line_parts.push
-              index: symbol_match[1].length
+              index: index
               input: symbol_match.input
-              type:  symbol_match[2]
+              type:  operator
 
           # if the content is string/int
           else
