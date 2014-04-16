@@ -55,6 +55,16 @@ numero =
 ["uno",   1, "one"]
 ["dos",   2, "two"]
 ["diez", 10, "ten"]
+
+# from
+uno=count 1
+dos=count 1, 1
+diez=count 10, 0
+
+# to
+uno  = count 1
+dos  = count 1, 1
+diez = count 10, 0
 ```
 
 #### Comma seperated object

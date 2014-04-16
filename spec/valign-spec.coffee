@@ -100,6 +100,21 @@ describe 'Valign:', ->
       expect(editor.lineForBufferRow 5).toBe  '["diez":  10, "once":        11]'
       expect(editor.lineForBufferRow 6).toBe '["vente": 20, "vente y uno": 21]'
 
+  describe 'Formatting "method call assignments"', ->
+    beforeEach ->
+      editor.setText """
+        uno=count 1
+        dos  =count 1, 1
+        diez=  count 10, 0
+      """
+
+      Valign.align editor
+
+    it 'should align method calls correctly', ->
+      expect(editor.lineForBufferRow 0).toBe 'uno  = count 1'
+      expect(editor.lineForBufferRow 1).toBe 'dos  = count 1, 1'
+      expect(editor.lineForBufferRow 2).toBe 'diez = count 10, 0'
+
   describe 'Formatting "comments"', ->
     beforeEach ->
       editor.setText """

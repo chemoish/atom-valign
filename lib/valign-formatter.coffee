@@ -122,8 +122,6 @@ module.exports =
 
     formatted_lines = @formatLines lines
 
-    console.log formatted_lines, editor.getGrammar()
-
     index_map = @getIndexMap formatted_lines
 
     text = @buildText formatted_lines, index_map
@@ -153,7 +151,10 @@ module.exports =
           type:  'string'
 
       else
-        parts = line.input.split ','
+        if line.prefix and line.suffix
+          parts = line.input.split ','
+        else
+          parts = [line.input]
 
         for part in parts
           content = part.trim()
@@ -208,7 +209,7 @@ module.exports =
   getLines: (editor, block) ->
     lines = []
 
-    wrapper_regex = /^([\{\[\(])(.*?)([\}\]\)])$/
+    wrapper_regex = /^([\{\[])(.*?)([\}\]])$/
 
     for i in [block.start..block.end]
       input = editor.lineForBufferRow i
