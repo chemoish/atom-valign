@@ -15,12 +15,14 @@ one  ="uno"
 two="dos"
 three="thres"
 four=  "quatro"
+five = contar 2, 3
 
 # to
 one   = "uno"
 two   = "dos"
 three = "thres"
 four  = "quatro"
+five  = contar 2, 3
 ```
 
 #### Colon
@@ -55,16 +57,6 @@ numero =
 ["uno",   1, "one"]
 ["dos",   2, "two"]
 ["diez", 10, "ten"]
-
-# from
-uno=count 1
-dos=count 1, 1
-diez=count 10, 0
-
-# to
-uno  = count 1
-dos  = count 1, 1
-diez = count 10, 0
 ```
 
 #### Comma seperated object
