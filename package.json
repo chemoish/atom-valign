@@ -1,12 +1,12 @@
 {
   "name": "valign",
   "main": "./lib/valign",
-  "version": "0.0.0",
-  "description": "A short description of your package",
+  "version": "0.0.1",
+  "description": "Align operators and comma separated values in atom editor for CoffeeScript.",
   "activationEvents": [
     "valign:align"
   ],
-  "repository": "https://github.com/atom/valign",
+  "repository": "https://github.com/chemoish/atom-valign",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"

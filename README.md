@@ -1,7 +1,7 @@
 # Atom.io – Valign Package
 
 > Align operators and comma separated values in atom editor for CoffeeScript with `ctrl-\`.
-> Technically works for Jade.
+> Technically works for Jade and CoffeeScript in Markdown.
 
 ![valign](https://raw.github.com/chemoish/atom-valign/master/demo.gif)
 
