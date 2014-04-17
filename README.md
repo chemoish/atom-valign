@@ -54,13 +54,13 @@ five  = contar 2, 3
 one  =  "uno"
 two+="dos"
 three  -="thres"
-four=  "quatro"
+four?=  "quatro"
 
 # to
 one    = "uno"
 two   += "dos"
 three -= "thres"
-four   = "quatro"
+four  ?= "quatro"
 ```
 
 #### Comma

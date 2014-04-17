@@ -21,8 +21,8 @@ module.exports =
         content = switch part.type
           when ':'
             part.input.replace /[\s]*([:])[\s]*/, "$1 #{spaces}"
-          when '=', '+=', '-='
-            part.input.replace /[\s]*([+-]?[=])[\s]*/, "#{spaces} $1 "
+          when '=', '+=', '-=', '?='
+            part.input.replace /[\s]*([+-\?]?[=])[\s]*/, "#{spaces} $1 "
           when 'string' then "#{part.input}"
           when 'number' then "#{spaces}#{part.input}"
           else ''
@@ -141,7 +141,7 @@ module.exports =
   ###
 
   formatLines: (lines) ->
-    symbol_regex  = /(.*?)[\s]*([+-]?[:=])/
+    symbol_regex  = /(.*?)[\s]*([+-\?]?[:=])/
 
     for line in lines
       line_parts = []

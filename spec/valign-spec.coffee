@@ -56,25 +56,27 @@ describe 'Valign:', ->
         four=  "quatro"
         five += 5
         twenty-=20
+        hundred  ?=  "cien"
       """
 
       Valign.align editor
 
     it 'should allow for multiple surrounding spaces to align correctly', ->
-      expect(editor.lineForBufferRow 0).toBe 'one     = "uno"'
+      expect(editor.lineForBufferRow 0).toBe 'one      = "uno"'
 
     it 'should allow for no spaces to align correctly', ->
-      expect(editor.lineForBufferRow 1).toBe 'two     = "dos"'
+      expect(editor.lineForBufferRow 1).toBe 'two      = "dos"'
 
     it 'should allow largest line with no spaces to format correctly', ->
-      expect(editor.lineForBufferRow 2).toBe 'three   = "thres"'
+      expect(editor.lineForBufferRow 2).toBe 'three    = "thres"'
 
     it 'should allow for right only spaces to align correctly', ->
-      expect(editor.lineForBufferRow 3).toBe 'four    = "quatro"'
+      expect(editor.lineForBufferRow 3).toBe 'four     = "quatro"'
 
     it 'should allow for assignment operators to align correctly', ->
-      expect(editor.lineForBufferRow 4).toBe 'five   += 5'
-      expect(editor.lineForBufferRow 5).toBe 'twenty -= 20'
+      expect(editor.lineForBufferRow 4).toBe 'five    += 5'
+      expect(editor.lineForBufferRow 5).toBe 'twenty  -= 20'
+      expect(editor.lineForBufferRow 6).toBe 'hundred ?= "cien"'
 
 
   describe 'Formatting ","', ->
