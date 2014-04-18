@@ -2,7 +2,7 @@
   "name": "valign",
   "main": "./lib/valign",
   "version": "0.7.0",
-  "description": "Aligns your code.",
+  "description": "Can has aligns your code.",
   "activationEvents": [
     "valign:align"
   ],
