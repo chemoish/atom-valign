@@ -1,40 +1,53 @@
 # Atom.io – Valign Package
 
-> Align operators and comma separated values in atom editor for CoffeeScript with `ctrl-\`.
-> Technically works for Jade and CoffeeScript in Markdown.
+> Align operators and comma separated values in atom editor with `ctrl-\`.
+> Intended for CoffeeScript and Jade, but works in Javascript, Markdown, others?
 
 ![valign](https://raw.github.com/chemoish/atom-valign/master/demo.gif)
 
-## Examples
+## Javascript Example
 
-#### Colon
+#### Assignment
 
-```coffeescript
-# from
-numero =
-  one  :  "uno"
-  two:"dos"
-  # TODO: ignore me
-  three  :"thres"
-  four:  "quatro"
+```javascript
+// from
+var beer = "belly";
+var pork_belly = "yummy";
+var yummy = 42;
 
-# to
-numero =
-  one:   "uno"
-  two:   "dos"
-  # TODO: ignore me
-  three: "thres"
-  four:  "quatro"
+// to
+var beer       = "belly";
+var pork_belly = "yummy";
+var yummy      = 42;
 ```
 
-#### Equal
+#### Object
+
+```javascript
+// from
+var obj = {
+  "beer": "belly",
+  "pork belly": "yummy",
+  "yummy": 42
+};
+
+// to
+var obj = {
+  "beer":       "belly",
+  "pork belly": "yummy",
+  "yummy":      42
+};
+```
+
+## CoffeeScript Example
+
+#### Assignment
 
 ```coffeescript
 # from
 one  =  "uno"
 two="dos"
 three  ="thres"
-four=  "quatro"
 # TODO: ignore me
 five = contar 2, 3
 
@@ -42,7 +55,6 @@ five = contar 2, 3
 one   = "uno"
 two   = "dos"
 three = "thres"
-four  = "quatro"
 # TODO: ignore me
 five  = contar 2, 3
 ```
@@ -63,7 +75,25 @@ three -= "thres"
 four  ?= "quatro"
 ```
 
-#### Comma
+#### Object
+
+```coffeescript
+# from
+numero =
+  one  :  "uno"
+  two:"dos"
+  # TODO: ignore me
+  three  :"thres"
+
+# to
+numero =
+  one:   "uno"
+  two:   "dos"
+  # TODO: ignore me
+  three: "thres"
+```
+
+#### Array
 
 ```coffeescript
 # from
@@ -77,7 +107,7 @@ four  ?= "quatro"
 ["diez", 10, "ten"]
 ```
 
-#### Comma seperated object
+#### Object in Array
 
 ```coffeescript
 # from
@@ -91,7 +121,7 @@ four  ?= "quatro"
 ["vente": 20, "vente y uno": 21]
 ```
 
-#### Jade
+## Jade Example
 
 ```jade
 div(
@@ -106,4 +136,3 @@ div(
   ng-diez  = getDiez(10, 0)
 )
 ```
-####
