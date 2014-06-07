@@ -23,6 +23,8 @@ module.exports =
             part.input.replace /[\s]*([:])[\s]*/, "$1 #{spaces}"
           when '=', '+=', '-=', '?='
             part.input.replace /[\s]*([+-\?]?[=])[\s]*/, "#{spaces} $1 "
+          when ' '
+            part.input.replace /([\s]+)/, " #{spaces}"
           when 'string' then "#{part.input}"
           when 'number' then "#{spaces}#{part.input}"
           else ''
@@ -83,14 +85,14 @@ module.exports =
 
     # todo: make more robust for string containing symbols
     # todo: atom may have line parsing?
-    if (line is '' or !line.match /[:=,]/)
+    if (line is '' or !line.match /[:=, ]/)
       return null
 
     isRowValid = (row) ->
       line = editor.lineForBufferRow row
 
       return line and
-             (editor.isBufferRowCommented(row) or line.match(/[:=,]/)) and
+             (editor.isBufferRowCommented(row) or line.match(/[:=, ]/)) and
              indentation is editor.indentationForBufferRow row
 
     nextLine = previousLine = line
@@ -141,7 +143,9 @@ module.exports =
   ###
 
   formatLines: (lines) ->
-    symbol_regex  = /(.*?)[\s]*([+-\?]?[:=])/
+    # must contain escaped ? first or else it will not capture correctly (not sure what js bug this is)
+    symbol_regex  = /(.*?)[\s]*([\?+-]?[:=])/
+    space_regex = /(.*?)([ ])/
 
     for line in lines
       line_parts = []
@@ -172,6 +176,17 @@ module.exports =
             line_parts.push
               index: index
               input: symbol_match.input
+              type:  operator
+
+          # if the content is space
+          else if space_match = space_regex.exec content
+            operator = space_match[2]
+
+            index = space_match[1].length
+
+            line_parts.push
+              index: index
+              input: space_match.input
               type:  operator
 
           # if the content is string/int

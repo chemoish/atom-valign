@@ -1,7 +1,7 @@
 # Atom.io – Valign Package
 
 > Align operators and comma separated values in atom editor with `ctrl-\`.
-> Intended for CoffeeScript and Jade, but works in Javascript, Markdown, others?
+> Intended for CoffeeScript, Jade, and Stylus, but works in Javascript, Markdown, others?
 
 ![valign](https://raw.github.com/chemoish/atom-valign/master/demo.gif)
 
@@ -135,4 +135,16 @@ div(
   data-dos = "2"
   ng-diez  = getDiez(10, 0)
 )
+```
+
+## Stylus Example
+
+```stylus
+#numero
+  color  blanco
+  font-size grande
+
+#numero
+  color     blanco
+  font-size grande
 ```

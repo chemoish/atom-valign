@@ -139,3 +139,17 @@ describe 'Valign:', ->
     it 'should align correctly, but capture and ignore formatting of commented lines', ->
       expect(editor.lineForBufferRow 0).toBe 'one   = "uno"'
       expect(editor.lineForBufferRow 2).toBe '# TODO: delete three'
+
+  describe 'Formatting "spaces"', ->
+    beforeEach ->
+      editor.setText """
+        one uno
+        two dos
+        three thres
+        four quatro
+      """
+
+      Valign.align editor
+
+    it 'should align correctly', ->
+      expect(editor.lineForBufferRow 0).toBe 'one   uno'
