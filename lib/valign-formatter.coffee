@@ -143,8 +143,7 @@ module.exports =
   ###
 
   formatLines: (lines) ->
-    # must contain escaped ? first or else it will not capture correctly (not sure what js bug this is)
-    symbol_regex  = /(.*?)[\s]*([\?+-]?[:=])/
+    symbol_regex  = /(.*?)[\s]*([+\-?]?[:=])/
     space_regex = /(.*?)([ ])/
 
     for line in lines
