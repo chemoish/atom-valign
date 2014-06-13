@@ -78,22 +78,39 @@ module.exports =
   ###
 
   findBlock: (editor) ->
+    space_regex = /[^ ]+[ ]+[^ ]+/
+    symbol_regex = /[:=,]/
+
     row  = editor.getCursorBufferPosition().row
     line = editor.lineForBufferRow row
 
     indentation = editor.indentationForBufferRow row
 
+    # validate type of line in two steps. first for symbol, next by space.
+    # this is primarly to get around not utilizing atom's language parsers.
+    # we do not want the space regex to conflict with typical symbol formatting.
+
+    is_symbol_block = symbol_regex.test line
+
+    is_space_block  = not is_symbol_block and space_regex.test line
+
     # todo: make more robust for string containing symbols
     # todo: atom may have line parsing?
-    if (line is '' or !line.match /[:=, ]/)
+    if (line is '' or (not is_symbol_block and not is_space_block))
       return null
 
     isRowValid = (row) ->
       line = editor.lineForBufferRow row
 
       return line and
-             (editor.isBufferRowCommented(row) or line.match(/[:=, ]/)) and
-             indentation is editor.indentationForBufferRow row
+             indentation is editor.indentationForBufferRow(row) and
+             (
+               editor.isBufferRowCommented(row) or
+               # row matches symbol block
+               (is_symbol_block and symbol_regex.test line) or
+               # row matches space block
+               (is_space_block and space_regex.test line)
+             )
 
     nextLine = previousLine = line
     nextRow = previousRow = row
