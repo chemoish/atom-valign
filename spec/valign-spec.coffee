@@ -57,6 +57,7 @@ describe 'Valign:', ->
         five += 5
         twenty-=20
         hundred  ?=  "cien"
+        thousand => "mil"
       """
 
       Valign.align editor
@@ -77,6 +78,7 @@ describe 'Valign:', ->
       expect(editor.lineForBufferRow 4).toBe 'five    += 5'
       expect(editor.lineForBufferRow 5).toBe 'twenty  -= 20'
       expect(editor.lineForBufferRow 6).toBe 'hundred ?= "cien"'
+      expect(editor.lineForBufferRow 7).toBe 'thousand => "mil"'
 
 
   describe 'Formatting ","', ->

@@ -21,8 +21,9 @@ module.exports =
         content = switch part.type
           when ':'
             part.input.replace /[\s]*([:])[\s]*/, "$1 #{spaces}"
-          when '=', '+=', '-=', '?='
-            part.input.replace /[\s]*([+-\?]?[=])[\s]*/, "#{spaces} $1 "
+          # TODO: `>` is a one-off hack for php suffix
+          when '=', '+=', '-=', '?=', '=>'
+            part.input.replace /[\s]*([+-\?]?[=][>]?)[\s]*/, "#{spaces} $1 "
           when ' '
             part.input.replace /([\s]+)/, " #{spaces}"
           when 'string' then "#{part.input}"
@@ -94,8 +95,8 @@ module.exports =
 
     is_space_block  = not is_symbol_block and space_regex.test line
 
-    # todo: make more robust for string containing symbols
-    # todo: atom may have line parsing?
+    # TODO: make more robust for string containing symbols
+    # TODO: atom may have line parsing?
     if (line is '' or (not is_symbol_block and not is_space_block))
       return null
 
@@ -160,7 +161,8 @@ module.exports =
   ###
 
   formatLines: (lines) ->
-    symbol_regex  = /(.*?)[\s]*([+\-?]?[:=])/
+    # TODO: `>` is a one-off hack for php suffix
+    symbol_regex  = /(.*?)[\s]*([+\-?]?[:=][>]?)/
     space_regex = /(.*?)([ ])/
 
     for line in lines
@@ -188,6 +190,9 @@ module.exports =
             # assignment operators will be longer and we should attach the extra
             # character to the index
             index = symbol_match[1].length + operator.length - 1
+
+            # TODO: one-off hack for php suffix
+            index-- if operator is '=>'
 
             line_parts.push
               index: index
