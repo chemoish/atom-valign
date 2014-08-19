@@ -11,17 +11,16 @@ describe 'Valign:', ->
   editor = null
 
   beforeEach ->
+    atom.workspaceView = new WorkspaceView
+
     waitsForPromise ->
-      atom.packages.activatePackage 'language-coffee-script'
+      atom.workspace.open 'test.coffee'
 
     runs ->
-      atom.workspaceView = new WorkspaceView
-      atom.workspaceView.openSync()
-
       editorView = atom.workspaceView.getActiveView()
       editor = editorView.getEditor()
 
-      editor.setGrammar atom.syntax.selectGrammar "test.coffee"
+      atom.packages.activatePackage 'language-coffee-script'
 
   describe 'Formatting ":"', ->
     beforeEach ->
