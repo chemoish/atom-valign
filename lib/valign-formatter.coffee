@@ -83,7 +83,7 @@ module.exports =
     symbol_regex = /[:=,]/
 
     row  = editor.getCursorBufferPosition().row
-    line = editor.lineForBufferRow row
+    line = editor.lineTextForBufferRow row
 
     indentation = editor.indentationForBufferRow row
 
@@ -101,7 +101,7 @@ module.exports =
       return null
 
     isRowValid = (row) ->
-      line = editor.lineForBufferRow row
+      line = editor.lineTextForBufferRow row
 
       return line and
              indentation is editor.indentationForBufferRow(row) and
@@ -256,7 +256,7 @@ module.exports =
     wrapper_regex = /^([\{\[])(.*?)([\}\]])$/
 
     for i in [block.start..block.end]
-      input = editor.lineForBufferRow i
+      input = editor.lineTextForBufferRow i
 
       if match = wrapper_regex.exec input.trim()
         input  = match[2]
@@ -292,11 +292,11 @@ module.exports =
     cursor_row = editor.getCursorBufferPosition().row
 
     # get the point at the end of the block
-    last_line = editor.lineForBufferRow block.end
+    last_line = editor.lineTextForBufferRow block.end
 
     # replace text
     editor.setTextInBufferRange [[block.start, 0], [block.end, last_line.length]], text
 
     # reset cursor position to end of previous selected line
     editor.setCursorBufferPosition [cursor_row, 0]
-    editor.moveCursorToEndOfLine()
+    editor.moveToEndOfLine()
