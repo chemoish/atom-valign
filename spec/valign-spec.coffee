@@ -1,5 +1,3 @@
-{WorkspaceView} = require 'atom'
-
 Valign = require '../lib/valign'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
@@ -8,10 +6,11 @@ Valign = require '../lib/valign'
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
 describe 'Valign:', ->
-  editor = null
+  editor           = null
+  workspaceElement = null
 
   beforeEach ->
-    atom.workspaceView = new WorkspaceView
+    workspaceElement = atom.views.getView(atom.workspace)
 
     waitsForPromise ->
       atom.packages.activatePackage 'language-coffee-script'
@@ -19,11 +18,9 @@ describe 'Valign:', ->
       atom.workspace.open 'test.coffee'
 
     runs ->
-      atom.workspaceView.attachToDom()
+      jasmine.attachToDOM(workspaceElement)
 
-      editorView = atom.workspaceView.getActiveView()
-
-      editor = editorView.getEditor()
+      editor = atom.workspace.getActiveTextEditor()
 
   describe 'Formatting ":"', ->
     beforeEach ->
