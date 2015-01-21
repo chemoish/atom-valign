@@ -15,7 +15,7 @@ describe 'Valign:', ->
 
     waitsForPromise ->
       atom.packages.activatePackage 'language-coffee-script'
-      
+
       atom.workspace.open 'test.coffee'
 
     runs ->

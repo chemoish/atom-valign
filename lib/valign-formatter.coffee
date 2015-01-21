@@ -1,5 +1,5 @@
-getSpaces = (length) ->
-  return Array(length).join ' '
+getSpaces = (length, character = ' ') ->
+  return Array(length).join character
 
 module.exports =
   ###
@@ -47,11 +47,12 @@ module.exports =
       {
         indent
         indent_level
+        indent_text
         prefix
         suffix
       } = formatted_line
 
-      indentation = getSpaces indent * indent_level + 1
+      indentation = getSpaces indent_level + 1, indent_text
 
       for part, i in formatted_line.parts
         max_content_length = content_map[i - 1]
@@ -269,6 +270,7 @@ module.exports =
       lines.push
         indent:       editor.getTabLength()
         indent_level: editor.indentationForBufferRow i
+        indent_text:  editor.getTabText()
         input:        input.trim()
         is_comment:   editor.isBufferRowCommented i
         prefix:       prefix
