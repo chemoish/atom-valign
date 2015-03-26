@@ -3,7 +3,7 @@ extend = require 'extend'
 module.exports =
   operators:
     '=':
-      match:  '=|\\+=|-=|&=|\\|=|~=|%=|/=|\\*=|\\.=|\\?='
+      match:  '=|\\+=|-=|&=|\\|=|~=|%=|/=|\\*=|\\.=|\\?=|^='
 
     ':':
       match:  ':'
@@ -13,7 +13,7 @@ module.exports =
 
   getBaseOperator: (operator) ->
     return operator unless operator?
-    
+
     return operator if this.operators[operator]?
 
     for key, value of this.operators

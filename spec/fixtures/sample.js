@@ -7,8 +7,8 @@ var numero = {
 
 var one  =  "uno",
 two="dos",
-  three  ="thres",
-        four=  "quatro";
+three  ="thres",
+four=  "quatro";
 
 one  =  "uno";
 two+="dos";

@@ -4,8 +4,6 @@ format = require './format/format'
 read   = require './read/read'
 write  = require './write/write'
 
-valignFormatter = require './valign-formatter'
-
 module.exports =
   config: config
 

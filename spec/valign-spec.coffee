@@ -84,14 +84,6 @@ describe 'Valign:', ->
         expect(editor.lineTextForBufferRow 9).toBe '    three = "thres",'
         expect(editor.lineTextForBufferRow 10).toBe '    four  = "quatro";'
 
-      editor.setCursorBufferPosition [8, 0]
-
-      trigger ->
-        expect(editor.lineTextForBufferRow 7).toBe 'var one   = "uno",'
-        expect(editor.lineTextForBufferRow 8).toBe '    two   = "dos",'
-        expect(editor.lineTextForBufferRow 9).toBe '    three = "thres",'
-        expect(editor.lineTextForBufferRow 10).toBe '    four  = "quatro";'
-
     it 'should format complex "=" correctly.', ->
       editor.setCursorBufferPosition [12, 0]
 
