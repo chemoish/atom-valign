@@ -3,9 +3,9 @@
   "main": "./lib/valign",
   "version": "0.13.4",
   "description": "Can has aligns your code.",
-  "activationEvents": [
-    "valign:align"
-  ],
+  "activationCommands": {
+    "atom-text-editor": ["valign:align"]
+  },
   "repository": "https://github.com/chemoish/atom-valign",
   "license": "MIT",
   "engines": {
@@ -13,5 +13,8 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.0.3"
+  },
+  "devDependencies": {
+    "extend": "~2.0.0"
   }
 }

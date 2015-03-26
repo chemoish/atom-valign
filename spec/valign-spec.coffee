@@ -1,156 +1,224 @@
-Valign = require '../lib/valign'
-
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
 describe 'Valign:', ->
-  editor           = null
-  workspaceElement = null
+  [
+    buffer
+    editor
+    editorView
+    valignActivation
+  ] = []
 
-  beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace)
+  trigger = (callback) ->
+    atom.commands.dispatch editorView, 'valign:align'
 
     waitsForPromise ->
-      atom.packages.activatePackage 'language-coffee-script'
+      valignActivation
 
-      atom.workspace.open 'test.coffee'
+    runs(callback)
 
-    runs ->
-      jasmine.attachToDOM(workspaceElement)
-
-      editor = atom.workspace.getActiveTextEditor()
-
-  describe 'Formatting ":"', ->
+  describe 'CoffeeScript:', ->
     beforeEach ->
-      editor.setText """
-        numero =
-          one  :  "uno"
-          two:"dos"
-          three  :"thres"
-          four:  "quatro"
-      """
+      waitsForPromise ->
+        atom.packages.activatePackage 'language-coffee-script'
 
-      Valign.align editor
+      waitsForPromise ->
+        atom.workspace.open 'sample.coffee'
 
-    it 'should allow for multiple surrounding spaces to align correctly', ->
-      expect(editor.lineTextForBufferRow 1).toBe '  one:   "uno"'
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
 
-    it 'should allow for no spaces to align correctly', ->
-      expect(editor.lineTextForBufferRow 2).toBe '  two:   "dos"'
+        valignActivation = atom.packages.activatePackage 'valign'
 
-    it 'should allow for left only spaces to align correctly', ->
-      expect(editor.lineTextForBufferRow 3).toBe '  three: "thres"'
+    it 'should format ":" correctly.', ->
+      editor.setCursorBufferPosition [1, 0]
 
-    it 'should allow for right only spaces to align correctly', ->
-      expect(editor.lineTextForBufferRow 4).toBe '  four:  "quatro"'
+      trigger ->
+        expect(editor.lineTextForBufferRow 1).toBe '  one:   "uno"'
+        expect(editor.lineTextForBufferRow 2).toBe '  two:   "dos"'
+        expect(editor.lineTextForBufferRow 3).toBe '  three: "thres"'
+        expect(editor.lineTextForBufferRow 4).toBe '  four:  "quatro"'
 
-  describe 'Formatting "="', ->
+    it 'should format "=" correctly.', ->
+      editor.setCursorBufferPosition [6, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 6).toBe 'one    = "uno"'
+        expect(editor.lineTextForBufferRow 7).toBe 'two   += "dos"'
+        expect(editor.lineTextForBufferRow 8).toBe '# comment'
+        expect(editor.lineTextForBufferRow 9).toBe 'three -= "thres"'
+        expect(editor.lineTextForBufferRow 10).toBe 'four  ?= "quatro"'
+
+  describe 'JavaScript:', ->
     beforeEach ->
-      editor.setText """
-        one  =  "uno"
-        two="dos"
-        three  ="thres"
-        four=  "quatro"
-        five += 5
-        twenty-=20
-        hundred  ?=  "cien"
-        thousand => "mil"
-      """
+      waitsForPromise ->
+        atom.packages.activatePackage 'language-javascript'
 
-      Valign.align editor
+      waitsForPromise ->
+        atom.workspace.open 'sample.js'
 
-    it 'should allow for multiple surrounding spaces to align correctly', ->
-      expect(editor.lineTextForBufferRow 0).toBe 'one      = "uno"'
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
 
-    it 'should allow for no spaces to align correctly', ->
-      expect(editor.lineTextForBufferRow 1).toBe 'two      = "dos"'
+        valignActivation = atom.packages.activatePackage 'valign'
 
-    it 'should allow largest line with no spaces to format correctly', ->
-      expect(editor.lineTextForBufferRow 2).toBe 'three    = "thres"'
+    it 'should format ":" correctly.', ->
+      editor.setCursorBufferPosition [1, 0]
 
-    it 'should allow for right only spaces to align correctly', ->
-      expect(editor.lineTextForBufferRow 3).toBe 'four     = "quatro"'
+      trigger ->
+        expect(editor.lineTextForBufferRow 1).toBe '  one:   "uno",'
+        expect(editor.lineTextForBufferRow 2).toBe '  two:   "dos",'
+        expect(editor.lineTextForBufferRow 3).toBe '  three: "thres",'
+        expect(editor.lineTextForBufferRow 4).toBe '  four:  "quatro"'
 
-    it 'should allow for assignment operators to align correctly', ->
-      expect(editor.lineTextForBufferRow 4).toBe 'five    += 5'
-      expect(editor.lineTextForBufferRow 5).toBe 'twenty  -= 20'
-      expect(editor.lineTextForBufferRow 6).toBe 'hundred ?= "cien"'
-      expect(editor.lineTextForBufferRow 7).toBe 'thousand => "mil"'
+    it 'should format multiline "=" correctly.', ->
+      editor.setCursorBufferPosition [7, 0]
 
+      trigger ->
+        expect(editor.lineTextForBufferRow 7).toBe 'var one   = "uno",'
+        expect(editor.lineTextForBufferRow 8).toBe '    two   = "dos",'
+        expect(editor.lineTextForBufferRow 9).toBe '    three = "thres",'
+        expect(editor.lineTextForBufferRow 10).toBe '    four  = "quatro";'
 
-  describe 'Formatting ","', ->
+      editor.setCursorBufferPosition [8, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 7).toBe 'var one   = "uno",'
+        expect(editor.lineTextForBufferRow 8).toBe '    two   = "dos",'
+        expect(editor.lineTextForBufferRow 9).toBe '    three = "thres",'
+        expect(editor.lineTextForBufferRow 10).toBe '    four  = "quatro";'
+
+    it 'should format complex "=" correctly.', ->
+      editor.setCursorBufferPosition [12, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 12).toBe 'one    = "uno";'
+        expect(editor.lineTextForBufferRow 13).toBe 'two   += "dos";'
+        expect(editor.lineTextForBufferRow 14).toBe '// comment'
+        expect(editor.lineTextForBufferRow 15).toBe 'three -= "thres";'
+
+  describe 'PHP:', ->
     beforeEach ->
-      editor.setText """
-        ["uno", 1, "one"]
-        ["dos", 2, "two"]
-        ["diez", 10, "ten"]
+      waitsForPromise ->
+        atom.packages.activatePackage 'language-php'
 
-        ["uno": 1, "dos": 2]
-        ["diez": 10, "once": 11]
-        ["vente": 20, "vente y uno": 21]
-      """
+      waitsForPromise ->
+        atom.workspace.open 'sample.php'
 
-    it 'should align strings and numbers correctly', ->
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
+
+        valignActivation = atom.packages.activatePackage 'valign'
+
+    it 'should format "=>" correctly.', ->
+      editor.setCursorBufferPosition [3, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 3).toBe '  "one"   => "uno"'
+        expect(editor.lineTextForBufferRow 4).toBe '  "two"   => "dos"'
+        expect(editor.lineTextForBufferRow 5).toBe '  "three" => "thres"'
+        expect(editor.lineTextForBufferRow 6).toBe '  "four"  => "quatro"'
+
+    it 'should format "=" correctly.', ->
+      editor.setCursorBufferPosition [9, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 9).toBe 'var one  = "uno";'
+        expect(editor.lineTextForBufferRow 10).toBe 'two     += "dos";'
+        expect(editor.lineTextForBufferRow 11).toBe '// comment'
+        expect(editor.lineTextForBufferRow 12).toBe 'three   -= "thres";'
+        expect(editor.lineTextForBufferRow 13).toBe 'four    *= "four";'
+
+  describe 'Sass:', ->
+    beforeEach ->
+      waitsForPromise ->
+        atom.packages.activatePackage 'language-sass'
+
+      waitsForPromise ->
+        atom.workspace.open 'sample.scss'
+
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
+
+        valignActivation = atom.packages.activatePackage 'valign'
+
+    it 'should format variable ":" correctly.', ->
       editor.setCursorBufferPosition [0, 0]
 
-      Valign.align editor
+      trigger ->
+        expect(editor.lineTextForBufferRow 0).toBe '$font-stack:    Helvetica, sans-serif;'
+        expect(editor.lineTextForBufferRow 1).toBe '$primary-color: #333;'
 
-      expect(editor.lineTextForBufferRow 0).toBe '["uno",   1, "one"]'
-      expect(editor.lineTextForBufferRow 1).toBe '["dos",   2, "two"]'
-      expect(editor.lineTextForBufferRow 2).toBe '["diez", 10, "ten"]'
-
-    it 'should align objects, then commas correctly', ->
+    it 'should format ":" correctly.', ->
       editor.setCursorBufferPosition [4, 0]
 
-      Valign.align editor
+      trigger ->
+        expect(editor.lineTextForBufferRow 4).toBe '  color: $primary-color;'
+        expect(editor.lineTextForBufferRow 5).toBe '  // comment'
+        expect(editor.lineTextForBufferRow 6).toBe '  font:  100% $font-stack;'
 
-      expect(editor.lineTextForBufferRow 4).toBe  '["uno":   1,  "dos":         2]'
-      expect(editor.lineTextForBufferRow 5).toBe  '["diez":  10, "once":        11]'
-      expect(editor.lineTextForBufferRow 6).toBe '["vente": 20, "vente y uno": 21]'
-
-  describe 'Formatting "method call assignments"', ->
+  describe 'less:', ->
     beforeEach ->
-      editor.setText """
-        uno=count 1
-        dos  =count 1, 1
-        diez=  count 10, 0
-      """
+      waitsForPromise ->
+        atom.packages.activatePackage 'language-less'
 
-      Valign.align editor
+      waitsForPromise ->
+        atom.workspace.open 'sample.less'
 
-    it 'should align method calls correctly', ->
-      expect(editor.lineTextForBufferRow 0).toBe 'uno  = count 1'
-      expect(editor.lineTextForBufferRow 1).toBe 'dos  = count 1, 1'
-      expect(editor.lineTextForBufferRow 2).toBe 'diez = count 10, 0'
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
 
-  describe 'Formatting "comments"', ->
+        valignActivation = atom.packages.activatePackage 'valign'
+
+    it 'should format variable ":" correctly.', ->
+      editor.setCursorBufferPosition [0, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 0).toBe '@nice-blue:  #5B83AD;'
+        expect(editor.lineTextForBufferRow 1).toBe '@light-blue: @nice-blue + #111;'
+
+    it 'should format ":" correctly.', ->
+      editor.setCursorBufferPosition [4, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 4).toBe '  background-color: @nice-blue;'
+        expect(editor.lineTextForBufferRow 5).toBe '  // comment'
+        expect(editor.lineTextForBufferRow 6).toBe '  color:            @light-blue;'
+
+  describe 'Text:', ->
     beforeEach ->
-      editor.setText """
-        one  =  "uno"
-        two="dos"
-        # TODO: delete three
-        three="thres"
-        four =    "quatro"
-      """
+      waitsForPromise ->
+        atom.packages.activatePackage 'language-text'
 
-      Valign.align editor
+      waitsForPromise ->
+        atom.workspace.open 'sample.txt'
 
-    it 'should align correctly, but capture and ignore formatting of commented lines', ->
-      expect(editor.lineTextForBufferRow 0).toBe 'one   = "uno"'
-      expect(editor.lineTextForBufferRow 2).toBe '# TODO: delete three'
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
 
-  describe 'Formatting "spaces"', ->
-    beforeEach ->
-      editor.setText """
-        one uno
-        two dos
-        three thres
-        four quatro
-      """
+        valignActivation = atom.packages.activatePackage 'valign'
 
-      Valign.align editor
+    it 'should format variable ":" correctly.', ->
+      editor.setCursorBufferPosition [1, 0]
 
-    it 'should align correctly', ->
-      expect(editor.lineTextForBufferRow 0).toBe 'one   uno'
+      trigger ->
+        expect(editor.lineTextForBufferRow 1).toBe '  one:   "uno",'
+        expect(editor.lineTextForBufferRow 2).toBe '  two:   "dos",'
+        expect(editor.lineTextForBufferRow 3).toBe '  three: "thres",'
+        expect(editor.lineTextForBufferRow 4).toBe '  four:  "quatro"'
+
+    it 'should format ":" correctly.', ->
+      editor.setCursorBufferPosition [7, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 7).toBe 'one    = "uno";'
+        expect(editor.lineTextForBufferRow 8).toBe 'two   += "dos";'
+        expect(editor.lineTextForBufferRow 9).toBe 'three -= "thres";'

@@ -1,12 +1,25 @@
+config = require './config'
+
+format = require './format/format'
+read   = require './read/read'
+write  = require './write/write'
+
 valignFormatter = require './valign-formatter'
 
 module.exports =
+  config: config
+
   activate: ->
     atom.commands.add 'atom-text-editor',
-      'valign:align': => @align atom.workspace.activePaneItem
+      'valign:align': =>
+        @align atom.workspace.getActiveTextEditor()
 
-  align: (editor) ->
-    if not editor or editor.hasMultipleCursors()
+  align: (text_editor) ->
+    if not text_editor or text_editor.hasMultipleCursors()
       return
 
-    valignFormatter.formatBlock editor
+    block = read.getBlock text_editor
+
+    block = format.formatBlock text_editor, block
+
+    write.writeBlock text_editor, block

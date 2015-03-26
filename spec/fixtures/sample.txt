@@ -1,0 +1,10 @@
+var numero = {
+  one  :  "uno",
+  two:"dos",
+  three  :"thres",
+  four:  "quatro"
+};
+
+one  =  "uno";
+two+="dos";
+three  -="thres";
