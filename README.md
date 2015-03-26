@@ -85,6 +85,24 @@ var numero = {
 
 ```coffee
 # from
+one  =  "uno"
+two+="dos"
+three  -="thres"
+four?=  "quatro"
+```
+
+```coffee
+# to
+one    = "uno"
+two   += "dos"
+three -= "thres"
+four  ?= "quatro"
+```
+
+#### Object
+
+```coffee
+# from
 numero =
   one  :  "uno"
   two:"dos"
@@ -99,24 +117,6 @@ numero =
   two:   "dos"
   three: "thres"
   four:  "quatro"
-```
-
-#### Object
-
-```coffee
-# from
-one  =  "uno"
-two+="dos"
-three  -="thres"
-four?=  "quatro"
-```
-
-```coffee
-# to
-one    = "uno"
-two   += "dos"
-three -= "thres"
-four  ?= "quatro"
 ```
 
 ### PHP
