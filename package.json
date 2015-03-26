@@ -1,10 +1,12 @@
 {
   "name": "valign",
   "main": "./lib/valign",
-  "version": "0.13.4",
+  "version": "1.0.0",
   "description": "Can has aligns your code.",
   "activationCommands": {
-    "atom-text-editor": ["valign:align"]
+    "atom-text-editor": [
+      "valign:align"
+    ]
   },
   "repository": "https://github.com/chemoish/atom-valign",
   "license": "MIT",
