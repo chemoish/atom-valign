@@ -14,9 +14,7 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.0.3"
-  },
-  "devDependencies": {
-    "extend": "~2.0.0"
+    "atom-space-pen-views": "^2.0.3",
+    "extend": "^2.0.0"
   }
 }
