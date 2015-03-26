@@ -1,5 +1,11 @@
 operator_helper = require '../helper/operator'
 
+# hack for settings not being able to read object[':'] configurations
+CONFIG =
+  '=': 'EQUAL'
+  ':': 'COLON'
+  '=>': 'ARROW'
+
 class Base
   constructor: (@text_editor) ->
 
@@ -51,7 +57,7 @@ class Base
 
       break if base_operator?
 
-    return atom.config.get "valign.#{base_operator}"
+    return atom.config.get "valign.#{CONFIG[base_operator]}"
 
   getBlockSetting: (block) ->
     block_indentation   = this.getMaxOperatorIndentationForBlock block

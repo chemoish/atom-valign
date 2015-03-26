@@ -1,5 +1,5 @@
 module.exports =
-  '=':
+  EQUAL:
     type: 'object'
 
     properties:
@@ -17,7 +17,7 @@ module.exports =
         enum:        ['left', 'right', 'both', 'none']
         default:     'both'
 
-  ':':
+  COLON:
     type: 'object'
 
     properties:
@@ -35,7 +35,7 @@ module.exports =
         enum:        ['left', 'right', 'both', 'none']
         default:     'right'
 
-  '=>':
+  ARROW:
     type: 'object'
 
     properties:
