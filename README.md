@@ -1,73 +1,117 @@
 # Atom.io – Valign Package
 
-> Align operators and comma separated values in atom editor with `ctrl-\`.
-> Intended for CoffeeScript, Jade, and Stylus, but works in Javascript, Markdown, others?
+Easily align your code with `ctrl-\`.
 
-![valign](https://raw.github.com/chemoish/atom-valign/master/demo.gif)
+```js
+// from
+var easily = 'align';
+var your = 'code';
 
-## Javascript Example
+// to
+var easily = 'align';
+var your   = 'code';
+
+```
+
+## Features
+
+- General, works on any language without needing specific support
+- Aligns many kinds of operators (E.g. `%=`, `?=`, `|=`, `=>`, etc.)
+- Can configure alignment and padding of operators
+- Basic functionality works on untitled files (No grammar needed)
+
+## Settings
+
+- `Alignment "=" (Default: right)`
+- `Padding "=" (Default: both)`
+- `Alignment ":" (Default: left)`
+- `Padding ":" (Default: right)`
+- `Alignment "=>" (Default: right)`
+- `Padding "=>" (Default: both)`
+
+## Few Examples
+
+### JavaScript
+
+#### Assignment
+```js
+// from
+var one  =  "uno",
+two="dos",
+three  ="thres",
+four=  "quatro";
+
+one  =  "uno";
+two+="dos";
+three  -="thres";
+```
+
+```js
+// to
+var one   = "uno",
+    two   = "dos",
+    three = "thres",
+    four  = "quatro";
+
+one    = "uno";
+two   += "dos";
+three -= "thres";
+```
+
+#### Object
+```js
+// from
+var numero = {
+  one  :  "uno",
+  two:"dos",
+  three  :"thres",
+  four:  "quatro"
+};
+```
+
+```js
+// to
+var numero = {
+  one:   "uno",
+  two:   "dos",
+  three: "thres",
+  four:  "quatro"
+};
+```
+
+### CoffeeScript
 
 #### Assignment
 
-```javascript
-// from
-var beer = "belly";
-var pork_belly = "yummy";
-var yummy = 42;
+```coffee
+# from
+numero =
+  one  :  "uno"
+  two:"dos"
+  three  :"thres"
+  four:  "quatro"
+```
 
-// to
-var beer       = "belly";
-var pork_belly = "yummy";
-var yummy      = 42;
+```coffee
+# to
+numero =
+  one:   "uno"
+  two:   "dos"
+  three: "thres"
+  four:  "quatro"
 ```
 
 #### Object
 
-```javascript
-// from
-var obj = {
-  "beer": "belly",
-  "pork belly": "yummy",
-  "yummy": 42
-};
-
-// to
-var obj = {
-  "beer":       "belly",
-  "pork belly": "yummy",
-  "yummy":      42
-};
-```
-
-## CoffeeScript Example
-
-#### Assignment
-
-```coffeescript
-# from
-one  =  "uno"
-two="dos"
-three  ="thres"
-# TODO: ignore me
-five = contar 2, 3
-
-# to
-one   = "uno"
-two   = "dos"
-three = "thres"
-# TODO: ignore me
-five  = contar 2, 3
-```
-
-#### Assignment Operator
-
-```coffeescript
+```coffee
 # from
 one  =  "uno"
 two+="dos"
 three  -="thres"
 four?=  "quatro"
+```
 
+```coffee
 # to
 one    = "uno"
 two   += "dos"
@@ -75,76 +119,50 @@ three -= "thres"
 four  ?= "quatro"
 ```
 
-#### Object
+### PHP
 
-```coffeescript
-# from
-numero =
-  one  :  "uno"
-  two:"dos"
-  # TODO: ignore me
-  three  :"thres"
+#### Assignment
 
-# to
-numero =
-  one:   "uno"
-  two:   "dos"
-  # TODO: ignore me
-  three: "thres"
+```php
+// from
+var one  =  "uno";
+two+="dos";
+three  -="thres";
+four*=  "four";
+```
+
+```php
+// to
+var one  = "uno";
+two     += "dos";
+three   -= "thres";
+four    *= "four";
 ```
 
 #### Array
 
-```coffeescript
-# from
-["uno",1,"one"]
-["dos",2,"two"]
-["diez",10,"ten"]
-
-# to
-["uno",   1, "one"]
-["dos",   2, "two"]
-["diez", 10, "ten"]
+```php
+// from
+var numero = array(
+  "one"  =>  "uno"
+  "two"=>"dos"
+  "three"  =>"thres"
+  "four"=>  "quatro"
+);
 ```
 
-#### Object in Array
-
-```coffeescript
-# from
-["uno":1,"dos":2]
-["diez":10,"once":11]
-["vente":20,"vente y uno":21]
-
-# to
-["uno":   1,  "dos":         2]
-["diez":  10, "once":        11]
-["vente": 20, "vente y uno": 21]
+```php
+// to
+var numero = array(
+  "one"   => "uno"
+  "two"   => "dos"
+  "three" => "thres"
+  "four"  => "quatro"
+);
 ```
 
-## Jade Example
+## Notice
 
-```jade
-div(
-  data-uno  ="1"
-  data-dos="2"
-  ng-diez=  getDiez(10, 0)
-)
+This package has been fully rewritten and has stripped out array, object, and space alignment.
 
-div(
-  data-uno = "1"
-  data-dos = "2"
-  ng-diez  = getDiez(10, 0)
-)
-```
-
-## Stylus Example
-
-```stylus
-#numero
-  color  blanco
-  font-size grande
-
-#numero
-  color     blanco
-  font-size grande
-```
+If you would like to see these come back please [submit a issue](https://github.com/chemoish/atom-valign/issues).
