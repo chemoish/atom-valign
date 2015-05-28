@@ -31,7 +31,7 @@ class Base
     rows = (parseInt(row, 10) for row, line of block)
 
     rows.sort (a, b) ->
-      return a > b
+      return a - b
 
     start = (rows.slice 0, 1)[0]
     end   = (rows.slice -1)[0]

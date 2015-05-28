@@ -214,3 +214,20 @@ describe 'Valign:', ->
         expect(editor.lineTextForBufferRow 7).toBe 'one    = "uno";'
         expect(editor.lineTextForBufferRow 8).toBe 'two   += "dos";'
         expect(editor.lineTextForBufferRow 9).toBe 'three -= "thres";'
+
+    it 'should format 10 or more lines of code correctly.', ->
+      editor.setCursorBufferPosition [11, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 11).toBe 'one:   "uno",'
+        expect(editor.lineTextForBufferRow 12).toBe 'two:   "dos",'
+        expect(editor.lineTextForBufferRow 13).toBe 'three: "thres",'
+        expect(editor.lineTextForBufferRow 14).toBe 'four:  "quatro",'
+        expect(editor.lineTextForBufferRow 15).toBe 'one:   "uno",'
+        expect(editor.lineTextForBufferRow 16).toBe 'two:   "dos",'
+        expect(editor.lineTextForBufferRow 17).toBe 'three: "thres",'
+        expect(editor.lineTextForBufferRow 18).toBe 'four:  "quatro",'
+        expect(editor.lineTextForBufferRow 19).toBe 'one:   "uno",'
+        expect(editor.lineTextForBufferRow 20).toBe 'two:   "dos",'
+        expect(editor.lineTextForBufferRow 21).toBe 'three: "thres",'
+        expect(editor.lineTextForBufferRow 22).toBe 'four:  "quatro"'
