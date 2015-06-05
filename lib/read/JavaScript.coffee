@@ -13,7 +13,7 @@ class Javascript extends Base
     return block unless javascript_helper.isActiveRowAssignment block[row]
 
     rows = (row for row, line of block).sort (a, b) ->
-      return a > b
+      return a - b
 
     first_row = parseInt(rows.slice(0, 1))
     first_line = block[first_row]
@@ -27,8 +27,12 @@ class Javascript extends Base
     if not javascript_helper.isLineModifier(first_line) and previous_row >= 0
       previous_block = @findMatchingBlockForRow previous_row
 
+      previous_block = {} if javascript_helper.hasValidBlockIndentation(previous_block, block) is false
+
     if not javascript_helper.isLineTerminator(last_line) and next_row <= @text_editor.getLastBufferRow()
       next_block = @findMatchingBlockForRow next_row
+
+      next_block = {} if javascript_helper.hasValidBlockIndentation(block, next_block) is false
 
     return extend block, previous_block, next_block
 

@@ -8,9 +8,16 @@ class JavaScript extends Base
   formatMatchingBlock: (block) ->
     row = @text_editor.getCursorBufferPosition()?.row
 
+    # consider special formatting rules, if the current line is an `=`
     return super unless javascript_helper.isActiveRowAssignment block[row]
 
     for row, line of block
+      # if the current row doesn't contain an `=`, assume it doesn't require formatting
+      # if not javascript_helper.isActiveRowAssignment block[row]
+      #   delete block[row]
+      #
+      #   continue
+
       if javascript_helper.isLineModifier line
         line_modifier = line
 
@@ -19,7 +26,7 @@ class JavaScript extends Base
 
         text = line.line_text
 
-        text = text.replace(/^([\s]*)/, indentation)
+        text = text.replace(/^([\s]*)/, indentation + '$1')
 
         line.line_text = text
 
@@ -42,8 +49,10 @@ class JavaScript extends Base
     else if line.indentation.tab_length is 4
       level = 1
 
-    return '' unless line.indentation.level >= line_modifier.indentation.level
+    return '' if line.indentation.level < line_modifier.indentation.level
 
-    return this.getIndentation(line.indentation.tab_text, level)
+    return '' if line.indentation.level - line_modifier.indentation.level is level
+
+    return this.getIndentation line.indentation.tab_text, level
 
 module.exports = JavaScript

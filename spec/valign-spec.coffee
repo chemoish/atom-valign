@@ -84,6 +84,33 @@ describe 'Valign:', ->
         expect(editor.lineTextForBufferRow 9).toBe '    three = "thres",'
         expect(editor.lineTextForBufferRow 10).toBe '    four  = "quatro";'
 
+    it 'should format indented multiline "=" correctly.', ->
+      editor.setCursorBufferPosition [17, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 17).toBe '    var one   = "uno",'
+        expect(editor.lineTextForBufferRow 18).toBe '        two   = "dos",'
+        expect(editor.lineTextForBufferRow 19).toBe '        three = "thres",'
+        expect(editor.lineTextForBufferRow 20).toBe '        four  = "quatro";'
+
+    it 'should format formatted indented multiline "=" correctly.', ->
+      editor.setCursorBufferPosition [22, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 22).toBe '    var one   = "uno",'
+        expect(editor.lineTextForBufferRow 23).toBe '        two   = "dos",'
+        expect(editor.lineTextForBufferRow 24).toBe '        three = "thres",'
+        expect(editor.lineTextForBufferRow 25).toBe '        four  = "quatro";'
+
+    it 'should not format misaligned multiline "=" correctly.', ->
+      editor.setCursorBufferPosition [27, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 27).toBe '        var one = "uno",'
+        expect(editor.lineTextForBufferRow 28).toBe '    two="dos",'
+        expect(editor.lineTextForBufferRow 29).toBe '    three  ="thres",'
+        expect(editor.lineTextForBufferRow 30).toBe '    four=  "quatro";'
+
     it 'should format complex "=" correctly.', ->
       editor.setCursorBufferPosition [12, 0]
 
