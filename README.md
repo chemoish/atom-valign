@@ -1,6 +1,6 @@
 # Atom.io – Valign Package
 
-Easily align your code with `ctrl-\`.
+Easily align your code.
 
 ```js
 // from
@@ -13,9 +13,15 @@ var your   = 'code';
 
 ```
 
+## Hotkey
+
+| Command | Mac | PC and Linux |
+| --- | --- | --- |
+| Align code | Ctrl + \ | Alt + Ctrl + \ |
+
 ## Features
 
-- General, works on any language without needing specific support
+- General, works on **ANY** language without needing specific support
 - Aligns many kinds of operators (E.g. `%=`, `?=`, `|=`, `=>`, etc.)
 - Can configure alignment and padding of operators
 - Basic functionality works on untitled files (No grammar needed)
@@ -29,7 +35,7 @@ var your   = 'code';
 - `Alignment "=>" (Default: right)`
 - `Padding "=>" (Default: both)`
 
-## Few Examples
+## Few Examples <small><sub>(html, css, less, scss, etc. also work)</small>
 
 ### JavaScript
 
