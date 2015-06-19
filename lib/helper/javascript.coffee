@@ -39,7 +39,13 @@ module.exports =
   ###
 
   isActiveRowAssignment: (line) ->
-    return true if line.operator is '='
+    return true if (
+      line.operator is '=' and
+      (
+        @isLineDelimiter(line) or
+        @isLineModifier(line)
+      )
+    )
 
     return false
 
@@ -52,7 +58,7 @@ module.exports =
   isLineDelimiter: (line) ->
     tokens = line.tokens
 
-    return true if tokens[tokens.length - 1].scopes.indexOf(SCOPES.DELIMETER) isnt -1
+    return true if tokens[tokens.length - 1].scopes.indexOf(SCOPES.DELIMITER) isnt -1
 
     return false
 

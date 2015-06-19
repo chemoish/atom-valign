@@ -84,6 +84,15 @@ describe 'Valign:', ->
         expect(editor.lineTextForBufferRow 9).toBe '    three = "thres",'
         expect(editor.lineTextForBufferRow 10).toBe '    four  = "quatro";'
 
+    it 'should format complex "=" correctly.', ->
+      editor.setCursorBufferPosition [12, 0]
+
+      trigger ->
+        expect(editor.lineTextForBufferRow 12).toBe 'one    = "uno";'
+        expect(editor.lineTextForBufferRow 13).toBe 'two   += "dos";'
+        expect(editor.lineTextForBufferRow 14).toBe '// comment'
+        expect(editor.lineTextForBufferRow 15).toBe 'three -= "thres";'
+
     it 'should format indented multiline "=" correctly.', ->
       editor.setCursorBufferPosition [17, 0]
 
@@ -111,14 +120,12 @@ describe 'Valign:', ->
         expect(editor.lineTextForBufferRow 29).toBe '    three  ="thres",'
         expect(editor.lineTextForBufferRow 30).toBe '    four=  "quatro";'
 
-    it 'should format complex "=" correctly.', ->
-      editor.setCursorBufferPosition [12, 0]
+    it 'should format function "=" correctly.', ->
+      editor.setCursorBufferPosition [32, 0]
 
       trigger ->
-        expect(editor.lineTextForBufferRow 12).toBe 'one    = "uno";'
-        expect(editor.lineTextForBufferRow 13).toBe 'two   += "dos";'
-        expect(editor.lineTextForBufferRow 14).toBe '// comment'
-        expect(editor.lineTextForBufferRow 15).toBe 'three -= "thres";'
+        expect(editor.lineTextForBufferRow 32).toBe 'var func = function () {'
+        expect(editor.lineTextForBufferRow 33).toBe '  value=true;'
 
   describe 'PHP:', ->
     beforeEach ->

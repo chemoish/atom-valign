@@ -29,3 +29,7 @@ three  -="thres";
     two="dos",
     three  ="thres",
     four=  "quatro";
+
+var func=function () {
+  value=true;
+};
