@@ -43,7 +43,8 @@ module.exports =
       line.operator is '=' and
       (
         @isLineDelimiter(line) or
-        @isLineModifier(line)
+        @isLineModifier(line) or
+        @isLineTerminator(line)
       )
     )
 

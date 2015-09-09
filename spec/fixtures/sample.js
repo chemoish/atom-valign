@@ -30,6 +30,9 @@ three  -="thres";
     three  ="thres",
     four=  "quatro";
 
+var one  =  "uno",
+    two="dos";
+
 var func=function () {
   value=true;
 };
